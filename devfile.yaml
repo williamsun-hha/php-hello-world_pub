@@ -1,0 +1,46 @@
+schemaVersion: 2.0.0
+metadata:
+  name: php-mysql-devspace
+projects:
+  - name: php-hello-world
+    git:
+      remotes:
+        origin: "https://github.com/williamsun-hha/php-hello-world.git"
+components:
+  - type: dockerimage
+    image: php:7.4-apache
+    alias: php-runtime
+    mountSources: true
+    memoryLimit: 512Mi
+    endpoints:
+      - name: http
+        port: 80
+    command: ['sh', '-c', 'echo "<?php echo '\''Hello World!'\''; ?>" > /var/www/html/index.php && /usr/sbin/apache2ctl -D FOREGROUND']
+  - type: dockerimage
+    image: mysql:5.7
+    alias: mysql-db
+    memoryLimit: 1024Mi
+    mountSources: false
+    env:
+      - name: MYSQL_DATABASE
+        value: "hello_world_db"
+      - name: MYSQL_USER
+        value: "user"
+      - name: MYSQL_PASSWORD
+        value: "password"
+      - name: MYSQL_ROOT_PASSWORD
+        value: "rootpassword"
+    endpoints:
+      - name: mysql
+        port: 3306
+commands:
+  - id: start-php
+    exec:
+      component: php-runtime
+      commandLine: /usr/sbin/apache2ctl -D FOREGROUND
+      workingDir: /var/www/html
+  - id: start-mysql
+    exec:
+      component: mysql-db
+      commandLine: mysqld
+      workingDir: /
