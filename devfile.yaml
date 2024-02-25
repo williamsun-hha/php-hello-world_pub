@@ -5,7 +5,7 @@ projects:
   - name: php-hello-world
     git:
       remotes:
-        origin: "https://github.com/williamsun-hha/php-hello-world.git"
+        origin: "https://github.com/williamsun-hha/php-hello-world_pub.git"
 components:
   - type: dockerimage
     image: php:7.4-apache
